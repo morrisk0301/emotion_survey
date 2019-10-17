@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>감정미디어 설문 평가</title>
+
+    <!-- Bootstrap -->
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- iCheck -->
+    <style>
+        .text-main{
+            font-size: 20px;
+        }
+        .btn-start{
+            height: 60px;
+            width: 160px;
+            font-size: 20px;
+        }
+        .check-emotion{
+            height: 20px;
+            width: 20px;
+        }
+        .check-question{
+            height: 20px;
+            width: 20px;
+        }
+    </style>
+</head>
+<body class="nav-md bg-white">
+<div class="container">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-6">
+            <h1 class="text-center"> 주어진 음성을 듣고, 다음의 설문을 진행해주세요.(<%=page%>/60)</h1><br>
+        </div>
+        <div class="col"></div>
+    </div>
+    <br><br>
+    <div class="row">
+        <a href="#" id="listen"><img src="../images/play.png" width="100px" height="100px"/></a>
+        <h3 id="listen_label">재생 횟수(0/3)</h3>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-6">
+            <h3> 1. 청취한 음성에서 오는 느낌을 아래 그림에 표현하세요.</h3><br><br>
+            <a href="#"><img class="arousal" id="ar1" src="../images/arousal1.jpg"/></a><a href="#"><img class="arousal" id="ar2" src="../images/middle.jpg"/></a><a href="#"><img class="arousal" id="ar3" src="../images/arousal2.jpg"/></a>
+            <a href="#"><img class="arousal" id="ar4" src="../images/middle.jpg"/></a><a href="#"><img class="arousal" id="ar5" src="../images/arousal3.jpg"/></a><a href="#"><img class="arousal" id="ar6" src="../images/middle.jpg"/></a>
+            <a href="#"><img class="arousal" id="ar7" src="../images/arousal4.jpg"/></a><a href="#"><img class="arousal" id="ar8" src="../images/middle.jpg"/></a><a href="#"><img class="arousal" id="ar9" src="../images/arousal5.jpg"/></a><br><br>
+            <a href="#"><img class="valence" id="va1" src="../images/valence1.jpg"/></a><a href="#"><img class="valence" id="va2" src="../images/middle.jpg"/></a><a href="#"><img class="valence" id="va3" src="../images/valence2.jpg"/></a>
+            <a href="#"><img class="valence" id="va4" src="../images/middle.jpg"/></a><a href="#"><img class="valence" id="va5" src="../images/valence3.jpg"/></a><a href="#"><img class="valence" id="va6" src="../images/middle.jpg"/></a>
+            <a href="#"><img class="valence" id="va7" src="../images/valence4.jpg"/></a><a href="#"><img class="valence" id="va8" src="../images/middle.jpg"/></a><a href="#"><img class="valence" id="va9" src="../images/valence5.jpg"/></a><br><br>
+            <br><br><h3> 2.	청취한 음성에 대해 어떤 감정을 표현한다고 생각하십니까? </h3><br><br>
+            <input type="radio" class="flat check-emotion" name="table_records" id="anger">
+            <label class="text-main"> 분노(Anger)</label>
+            <input type="radio" class="flat check-emotion" name="table_records" id="happiness">
+            <label class="text-main"> 행복(Happiness)</label>
+            <input type="radio" class="flat check-emotion" name="table_records" id="sadness">
+            <label class="text-main"> 슬픔(Sadness)</label>
+            <input type="radio" class="flat check-emotion" name="table_records" id="fear">
+            <label class="text-main"> 두려움(Fear)</label><br><br>
+            <input type="radio" class="flat check-emotion" name="table_records" id="excitement">
+            <label class="text-main"> 흥분(Excitement)</label>
+            <input type="radio" class="flat check-emotion" name="table_records" id="disgust">
+            <label class="text-main"> 역겨움(Disgust)</label>
+            <input type="radio" class="flat check-emotion" name="table_records" id="surprise">
+            <label class="text-main"> 놀람(Surprise)</label>
+            <input type="radio" class="flat check-emotion" name="table_records" id="neutral">
+            <label class="text-main"> 무반응(Neutral)</label>
+            <br><br><br><h3> 3.	다음의 문항을 읽고 청취한 음성의 상태를 가장 잘 설명하는 숫자에 동그라미 하세요.</h3><br><br>
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                <tr class="headings">
+                    <th class="column-title">번호 </th>
+                    <th class="column-title">문항 </th>
+                    <th class="column-title">전혀 느끼지 않았다 </th>
+                    <th class="column-title">느끼지 않았다 </th>
+                    <th class="column-title">보통이다</th>
+                    <th class="column-title">조금 느꼈 </th>
+                    <th class="column-title">심하게 느꼈다 </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="even pointer">
+                    <td class="text-main">1</td>
+                    <td class="text-main">목소리 톤이 높다?</td>
+                    <td class=" "><input type="radio" class="flat check-question" name="1" id="1_1" required></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="1" id="1_2"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="1" id="1_3"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="1" id="1_4"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="1" id="1_5"></td>
+                </tr>
+                <tr class="odd pointer">
+                    <td class="text-main">2</td>
+                    <td class="text-main">목소리의 톤의 변화가 잦으며, 불규칙적이다?(Fear)</td>
+                    <td class=" "><input type="radio" class="flat check-question" name="2" id="2_1"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="2" id="2_2"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="2" id="2_3"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="2" id="2_4"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="2" id="2_5"></td>
+                </tr>
+                <tr class="even pointer">
+                    <td class="text-main">3</td>
+                    <td class="text-main">발화 중간에 규칙적인 묵음이 존재한다(fear)</td>
+                    <td class=" "><input type="radio" class="flat check-question" name="3" id="3_1"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="3" id="3_2"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="3" id="3_3"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="3" id="3_4"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="3" id="3_5"></td>
+                </tr>
+                <tr class="odd pointer">
+                    <td class="text-main">4</td>
+                    <td class="text-main">발화시에 목소리와 함께 진동이 발생한다.(fear)</td>
+                    <td class=" "><input type="radio" class="flat check-question" name="4" id="4_1"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="4" id="4_2"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="4" id="4_3"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="4" id="4_4"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="4" id="4_5"></td>
+                </tr>
+                <tr class="even pointer">
+                    <td class="text-main">5</td>
+                    <td class="text-main">발화시에 단어단어마다 호흡과 같은 잡음(?)이 함께 발생한다.(sadness)</td>
+                    <td class=" "><input type="radio" class="flat check-question" name="5" id="5_1"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="5" id="5_2"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="5" id="5_3"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="5" id="5_4"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="5" id="5_5"></td>
+                </tr>
+                <tr class="odd pointer">
+                    <td class="text-main">6</td>
+                    <td class="text-main">발화시에 단어단어마다 호흡과 같은 잡음(?)이 함께 발생한다.(sadness)</td>
+                    <td class=" "><input type="radio" class="flat check-question" name="6" id="6_1"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="6" id="6_2"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="6" id="6_3"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="6" id="6_4"></td>
+                    <td class=" "><input type="radio" class="flat check-question" name="6" id="6_5"></td>
+                </tr>
+                </tbody>
+            </table>
+            <br><br><h3> 4.	해당하는 파일은 정말 감정을 잘 드러내었는지 혹은 다른 특이사항이 있는지 본인의 의견을 작성해주세요.</h3><br><br>
+            <textarea cols="100" rows="15" id="detail" class="text-main"></textarea>
+        </div>
+        <div class="col"></div>
+    </div><br><br><br><br>
+    <div class="form-group">
+        <div class="col">
+            <button type="submit" id="btn_submit" class="btn btn-primary btn-start">제출하기 </button>
+        </div>
+    </div>
+    <br><br><br><br>
+
+</div>
+<script src="../vendors/jquery/dist/jquery.min.js"></script>
+<script>
+    var listenCnt = 0;
+    var questionNum = 6;
+    var arousalChecked = "default";
+    var valenceChecked = "default";
+    var emotionChecked = "default";
+    var question = {};
+    var page = "<%=page%>"
+
+    function unCheckArousal(id){
+        if(id != "ar1")
+            $("#ar1").attr('src', "../images/arousal1.jpg");
+        if(id != "ar2")
+            $("#ar2").attr('src', "../images/middle.jpg");
+        if(id != "ar3")
+            $("#ar3").attr('src', "../images/arousal2.jpg");
+        if(id != "ar4")
+            $("#ar4").attr('src', "../images/middle.jpg");
+        if(id != "ar5")
+            $("#ar5").attr('src', "../images/arousal3.jpg");
+        if(id != "ar6")
+            $("#ar6").attr('src', "../images/middle.jpg");
+        if(id != "ar7")
+            $("#ar7").attr('src', "../images/arousal4.jpg");
+        if(id != "ar8")
+            $("#ar8").attr('src', "../images/middle.jpg");
+        if(id != "ar9")
+            $("#ar9").attr('src', "../images/arousal5.jpg");
+    }
+    function unCheckValence(id){
+        if(id != "va1")
+            $("#va1").attr('src', "../images/valence1.jpg");
+        if(id != "va2")
+            $("#va2").attr('src', "../images/middle.jpg");
+        if(id != "va3")
+            $("#va3").attr('src', "../images/valence2.jpg");
+        if(id != "va4")
+            $("#va4").attr('src', "../images/middle.jpg");
+        if(id != "va5")
+            $("#va5").attr('src', "../images/valence3.jpg");
+        if(id != "va6")
+            $("#va6").attr('src', "../images/middle.jpg");
+        if(id != "va7")
+            $("#va7").attr('src', "../images/valence4.jpg");
+        if(id != "va8")
+            $("#va8").attr('src', "../images/middle.jpg");
+        if(id != "va9")
+            $("#va9").attr('src', "../images/valence5.jpg");
+    }
+
+    $(".check-emotion").on("click", function(event){
+        emotionChecked = this.id;
+    })
+    $(".check-question").on("click", function(event){
+        const id = this.id;
+        const arr = id.split("_");
+        question[arr[0]] = arr[1];
+    })
+    $(".arousal").click(function(){
+        arousalChecked = this.id
+        if(this.id == "ar1"){
+            $("#ar1").attr('src', "../images/arousal1_check.jpg");
+            unCheckArousal("ar1");
+        }
+        else if(this.id == "ar2"){
+            $("#ar2").attr('src', "../images/middle_check.jpg");
+            unCheckArousal("ar2");
+        }
+        else if(this.id == "ar3"){
+            $("#ar3").attr('src', "../images/arousal2_check.jpg");
+            unCheckArousal("ar3");
+        }
+        else if(this.id == "ar4"){
+            $("#ar4").attr('src', "../images/middle_check.jpg");
+            unCheckArousal("ar4");
+        }
+        else if(this.id == "ar5"){
+            $("#ar5").attr('src', "../images/arousal3_check.jpg");
+            unCheckArousal("ar5");
+        }
+        else if(this.id == "ar6"){
+            $("#ar6").attr('src', "../images/middle_check.jpg");
+            unCheckArousal("ar6");
+        }
+        else if(this.id == "ar7"){
+            $("#ar7").attr('src', "../images/arousal4_check.jpg");
+            unCheckArousal("ar7");
+        }
+        else if(this.id == "ar8"){
+            $("#ar8").attr('src', "../images/middle_check.jpg");
+            unCheckArousal("ar8");
+        }
+        else if(this.id == "ar9"){
+            $("#ar9").attr('src', "../images/arousal5_check.jpg");
+            unCheckArousal("ar9");
+        }
+    })
+    $(".valence").click(function(){
+        valenceChecked = this.id
+        if(this.id == "va1"){
+            $("#va1").attr('src', "../images/valence1_check.jpg");
+            unCheckValence("va1")
+        }
+        else if(this.id == "va2"){
+            $("#va2").attr('src', "../images/middle_check.jpg");
+            unCheckValence("va2")
+        }
+        else if(this.id == "va3"){
+            $("#va3").attr('src', "../images/valence2_check.jpg");
+            unCheckValence("va3")
+        }
+        else if(this.id == "va4"){
+            $("#va4").attr('src', "../images/middle_check.jpg");
+            unCheckValence("va4")
+        }
+        else if(this.id == "va5"){
+            $("#va5").attr('src', "../images/valence3_check.jpg");
+            unCheckValence("va5")
+        }
+        else if(this.id == "va6"){
+            $("#va6").attr('src', "../images/middle_check.jpg");
+            unCheckValence("va6")
+        }
+        else if(this.id == "va7"){
+            $("#va7").attr('src', "../images/valence4_check.jpg");
+            unCheckValence("va7")
+        }
+        else if(this.id == "va8"){
+            $("#va8").attr('src', "../images/middle_check.jpg");
+            unCheckValence("va8")
+        }
+        else if(this.id == "va9"){
+            $("#va9").attr('src', "../images/valence5_check.jpg");
+            unCheckValence("va9")
+        }
+    })
+    $("#listen").on("click", function(event){
+        if(listenCnt>=3){
+            $("#listen_label").text("재생 가능 횟수를 초과하였습니다.");
+            return false;
+        }
+
+        listenCnt+=1;
+        $("#listen_label").text("재생 횟수("+listenCnt.toString()+"/3)");
+    })
+
+    $("#btn_submit").on("click", function(event){
+        if(arousalChecked === "default" || valenceChecked === "default"){
+            alert("1번 문항을 확인해주세요.");
+            return false;
+        }
+        if(emotionChecked === "default"){
+            alert("2번 문항을 확인해주세요.");
+            return false;
+        }
+
+        if(Object.keys(question).length < questionNum){
+            alert("3번 문항을 확인해주세요.");
+            return false;
+        }
+
+        const query = {
+            arousal: arousalChecked,
+            valence: valenceChecked,
+            emotion: emotionChecked,
+            question: JSON.stringify(question),
+            detail: $("#detail").val(),
+            page: page
+        };
+
+        $.ajax({
+            url: '/survey',
+            type: 'POST',
+            data: query,
+            success: function (page) {
+                window.location = '/survey/'+page;
+                document.write(data);
+            }
+        });
+    })
+</script>
+
+</body>
+</html>

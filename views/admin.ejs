@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>감성미디어 관리자페이지</title>
+</head>
+<body>
+<div>
+    <h1><span class="fa fa-sign-in"></span> 설문지 목록</h1>
+    <table border="1" cellspacing="0">
+        <colgroup>
+            <col width="300">
+            <col width="500">
+            <col width="500">
+            <col width="300">
+        </colgroup>
+        <thead>
+        <tr>
+            <th scope="col">작성자 이름</th>
+            <th scope="col">작성자 소속</th>
+            <th scope="col">작성자 직책</th>
+            <th scope="col">작성 결과</th>
+        </tr>
+        </thead>
+        <tbody>
+    <%for(let i=0;i<user.length;i++){%>
+        <tr>
+            <td><%=user[i].user_name%></td>
+            <td><%=user[i].user_belong%></td>
+            <td><%=user[i].user_position%></td>
+            <td><a class="excel-down" href="#" id="<%=user[i].user_name%>_<%=user[i].user_id%>">다운로드</a></td>
+        </tr>
+        <%}%>
+        </tbody>
+    </table>
+    <br><br>
+</div>
+<script src="../vendors/jquery/dist/jquery.min.js"></script>
+<script src="./javascripts/buffer.js"></script>
+<script>
+    function saveByteArray(fileName, byte) {
+        const blob = new Blob([byte], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+    }
+
+    const Buffer = require('buffer');
+
+    $(".excel-down").on("click", async function(event){
+        const id = this.id;
+        const name = id.split("_")[0];
+        const user_id = id.split("_")[1]
+        $.ajax({
+            url: '/download/'+user_id,
+            type: 'GET',
+            success: function (data) {
+                const filename = '설문지 결과_'+name+'.xlsx';
+                saveByteArray(filename, Buffer.Buffer.from(data));
+            }
+        });
+        return false;
+    })
+</script>
+</body>
+</html>
