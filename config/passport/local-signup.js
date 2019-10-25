@@ -1,5 +1,14 @@
 const LocalStrategy = require('passport-local').Strategy;
 
+
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
 module.exports = new LocalStrategy({
     usernameField: 'name',
     passwordField: 'password',
@@ -27,11 +36,16 @@ module.exports = new LocalStrategy({
                 else
                     return done(null, "로그인 성공", user);
             } else {
+                let arr = [];
+                for(let i=0;i<60;i++)
+                    arr.push(i);
+                arr = shuffle(arr);
                 const newUser = new database.UserModel({
                     password: password,
                     user_belong: paramBelong,
                     user_position: paramPosition,
                     user_name: paramName,
+                    user_seed: arr
                 });
 
                 newUser.save(function (err, result) {

@@ -1,9 +1,103 @@
 const Excel = require('exceljs');
+const fileName = require('../utils/fileName');
 
 module.exports = function (router, passport) {
 
     router.get('/', function (req, res) {
         res.render('index');
+    });
+
+    router.get('/survey', function(req, res){
+        if(!req.user)
+            return res.redirect('/');
+        return res.redirect('/survey/1');
+    });
+
+    router.get('/survey/:page', function(req, res){
+        if(!req.user)
+            return res.redirect('/');
+
+        const database = req.app.get('database');
+        database.SurveyModel.find({
+            sv_user_id: req.user.user_id
+        }, (err, result) => {
+            const page = result.length+1;
+            const seed = req.user.user_seed[page];
+            if(page >= 60)
+                return res.render('done');
+            res.render('survey', {page: page, seed: seed});
+        });
+    });
+
+    router.get('/filename/:seed', function(req, res){
+        if(!req.user)
+            return res.json(null);
+
+        const seed = req.params.seed;
+        res.json(fileName(seed));
+    });
+
+    router.get('/admin', function(req, res){
+        const database = req.app.get('database');
+        database.UserModel.find({}, (err, results) => {
+            res.render('admin', {user: results});
+        })
+    });
+
+    router.get('/download/:id', function(req, res){
+        const database = req.app.get('database');
+        const id = req.params.id;
+
+        database.SurveyModel.find({
+            'sv_user_id': id
+        }).sort({sv_num: 1}).exec((err, result) => {
+            const workbook = new Excel.Workbook();
+            const worksheet = workbook.addWorksheet('설문 결과');
+            worksheet.columns = [
+                { header: 'SOUND_NUM', key: 'sv_num'},
+                { header: 'SOUND_NAME', key: 'sv_file_name'},
+                { header: 'Q1-AROUSAL', key: 'q1_1'},
+                { header: 'Q1-VALENCE', key: 'q1_2'},
+                { header: 'Q2', key: 'q2'},
+                { header: 'Q3-1', key: 'q3_1'},
+                { header: 'Q3-2', key: 'q3_2'},
+                { header: 'Q3-3', key: 'q3_3'},
+                { header: 'Q3-4', key: 'q3_4'},
+                { header: 'Q3-5', key: 'q3_5'},
+                { header: 'Q3-6', key: 'q3_6'},
+                { header: 'Q3-7', key: 'q3_7'},
+                { header: 'Q3-8', key: 'q3_8'},
+                { header: 'Q3-9', key: 'q3_9'},
+                { header: 'Q3-10', key: 'q3_10'},
+                { header: 'Q4', key: 'q4' },
+            ];
+            result.reduce(function (total, item) {
+                return total.then(async function () {
+                    worksheet.addRow({
+                        'sv_num': item.sv_num,
+                        'sv_file_name': item.sv_file_name,
+                        'q1_1': item.sv_arousal,
+                        'q1_2': item.sv_valence,
+                        'q2': item.sv_emotion,
+                        'q3_1': parseInt(item.sv_question["1"]),
+                        'q3_2': parseInt(item.sv_question["2"]),
+                        'q3_3': parseInt(item.sv_question["3"]),
+                        'q3_4': parseInt(item.sv_question["4"]),
+                        'q3_5': parseInt(item.sv_question["5"]),
+                        'q3_6': parseInt(item.sv_question["6"]),
+                        'q3_7': parseInt(item.sv_question["7"]),
+                        'q3_8': parseInt(item.sv_question["8"]),
+                        'q3_9': parseInt(item.sv_question["9"]),
+                        'q3_10': parseInt(item.sv_question["10"]),
+                        'q4': item.sv_detail,
+                    });
+                })
+            }, Promise.resolve()).then(function () {
+                workbook.xlsx.writeBuffer().then((buffer) => {
+                    res.json(new Buffer(buffer, 'array'));
+                });
+            });
+        })
     });
 
     router.post('/signup', function (req, res, next) {
@@ -27,79 +121,6 @@ module.exports = function (router, passport) {
 
     });
 
-    router.get('/survey', function(req, res){
-        if(!req.user)
-            return res.redirect('/');
-        return res.redirect('/survey/1');
-    });
-
-    router.get('/survey/:page', function(req, res){
-        if(!req.user)
-            return res.redirect('/');
-
-        const database = req.app.get('database');
-        database.SurveyModel.find({
-            sv_user_id: req.user.user_id
-        }, (err, result) => {
-            const page = result.length+1;
-            if(page >= 60)
-                return res.render('done');
-            res.render('survey', {page: page});
-        });
-    });
-
-    router.get('/admin', function(req, res){
-        const database = req.app.get('database');
-        database.UserModel.find({}, (err, results) => {
-            res.render('admin', {user: results});
-        })
-    });
-
-    router.get('/download/:id', function(req, res){
-        const database = req.app.get('database');
-        const id = req.params.id;
-
-        database.SurveyModel.find({
-            'sv_user_id': id
-        }).sort({sv_num: 1}).exec((err, result) => {
-            const workbook = new Excel.Workbook();
-            const worksheet = workbook.addWorksheet('설문 결과');
-            worksheet.columns = [
-                { header: 'SOUND_NUM', key: 'sv_num'},
-                { header: 'Q1-AROUSAL', key: 'q1_1'},
-                { header: 'Q1-VALENCE', key: 'q1_2'},
-                { header: 'Q2', key: 'q2'},
-                { header: 'Q3-1', key: 'q3_1'},
-                { header: 'Q3-2', key: 'q3_2'},
-                { header: 'Q3-3', key: 'q3_3'},
-                { header: 'Q3-4', key: 'q3_4'},
-                { header: 'Q3-5', key: 'q3_5'},
-                { header: 'Q3-6', key: 'q3_6'},
-                { header: 'Q4', key: 'q4' },
-            ];
-            result.reduce(function (total, item) {
-                return total.then(async function () {
-                    worksheet.addRow({
-                        'sv_num': item.sv_num,
-                        'q1_1': item.sv_arousal,
-                        'q1_2': item.sv_valence,
-                        'q2': item.sv_emotion,
-                        'q3_1': parseInt(item.sv_question["1"]),
-                        'q3_2': parseInt(item.sv_question["2"]),
-                        'q3_3': parseInt(item.sv_question["3"]),
-                        'q3_4': parseInt(item.sv_question["4"]),
-                        'q3_5': parseInt(item.sv_question["5"]),
-                        'q3_6': parseInt(item.sv_question["6"]),
-                        'q4': item.sv_detail,
-                    });
-                })
-            }, Promise.resolve()).then(function () {
-                workbook.xlsx.writeBuffer().then((buffer) => {
-                    res.json(new Buffer(buffer, 'array'));
-                });
-            });
-        })
-    });
 
     router.post('/survey', function (req, res) {
         if(!req.user)
@@ -109,12 +130,14 @@ module.exports = function (router, passport) {
         const page = req.body.page;
         const arousal = req.body.arousal.split("ar")[1];
         const valence = req.body.valence.split("va")[1];
+        const fileName = req.body.filename;
         const emotion = req.body.emotion;
         const detail = req.body.detail;
         const question = JSON.parse(req.body.question);
 
         const newSurvey = new database.SurveyModel({
             sv_num: page,
+            sv_file_name: fileName,
             sv_user_id: req.user.user_id,
             sv_arousal: arousal,
             sv_valence: valence,

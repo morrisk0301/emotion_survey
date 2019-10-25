@@ -5,6 +5,7 @@ Schema.createSchema = function(mongoose) {
 
     let SurveySchema = mongoose.Schema({
         sv_num: {type: Number, required: true}
+        , sv_file_name: {type: String, required: true}
         , sv_user_id: {type: Number, required: true}
         , sv_valence: {type: Number, required: true}
         , sv_arousal: {type: Number, required: true}

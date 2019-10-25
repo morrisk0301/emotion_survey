@@ -12,6 +12,7 @@ Schema.createSchema = function(mongoose) {
         , salt: {type: String}
         , user_position: {type: String, required: true}
         , user_name: {type: String, required: true}
+        , user_seed: {type: Array, required: true}
         , created_at: {type: Date, 'default': Date.now}
     });
 
