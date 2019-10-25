@@ -11,7 +11,7 @@ Schema.createSchema = function(mongoose) {
         , sv_arousal: {type: Number, required: true}
         , sv_emotion: {type: String, required: true}
         , sv_question: {type: Object, required: true}
-        , sv_detail: {type: String, required: true}
+        , sv_detail: {type: String}
         , created_at: {type: Date, 'default': Date.now}
     });
 
