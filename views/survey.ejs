@@ -61,14 +61,14 @@
             <br><br><h3> 2.	청취한 음성에 대해 어떤 감정을 표현한다고 생각하십니까? </h3><br><br>
             <input type="radio" class="flat check-emotion" name="table_records" id="anger">
             <label class="text-main"> 분노(Anger)</label>
+            <input type="radio" class="flat check-emotion" name="table_records" id="excitement">
+            <label class="text-main"> 흥분(Excitement)</label>
+            <input type="radio" class="flat check-emotion" name="table_records" id="fear">
+            <label class="text-main"> 두려움(Fear)</label>
             <input type="radio" class="flat check-emotion" name="table_records" id="happiness">
             <label class="text-main"> 행복(Happiness)</label>
             <input type="radio" class="flat check-emotion" name="table_records" id="sadness">
             <label class="text-main"> 슬픔(Sadness)</label>
-            <input type="radio" class="flat check-emotion" name="table_records" id="fear">
-            <label class="text-main"> 두려움(Fear)</label>
-            <input type="radio" class="flat check-emotion" name="table_records" id="excitement">
-            <label class="text-main"> 흥분(Excitement)</label>
             <input type="radio" class="flat check-emotion" name="table_records" id="neutral">
             <label class="text-main"> 무반응(Neutral)</label>
             <br><br><br><h3> 3.	다음의 문항을 읽고 청취한 음성의 상태를 가장 잘 설명하는 숫자에 동그라미 하세요.</h3><br><br>
@@ -213,13 +213,9 @@
                 })
         })
     }
-    async function playAudio() {
+    function playAudio() {
         if(listenCnt >=3)
             return;
-
-        const name = await getFileName("<%=seed%>");
-        filename = name;
-        audio = new Audio("../sounds/"+name);
         audio.play();
     }
     function unCheckArousal(id){
@@ -262,6 +258,12 @@
         if(id != "va9")
             $("#va9").attr('src', "../images/valence5.jpg");
     }
+
+    $(window).load(async function(){
+        const name = await getFileName("<%=seed%>");
+        filename = name;
+        audio = new Audio("../sounds/"+name);
+    })
 
     $(".check-emotion").on("click", function(event){
         emotionChecked = this.id;

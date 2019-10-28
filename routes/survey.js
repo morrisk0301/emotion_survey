@@ -58,7 +58,8 @@ module.exports = function (router, passport) {
                 { header: 'SOUND_NAME', key: 'sv_file_name'},
                 { header: 'Q1-AROUSAL', key: 'q1_1'},
                 { header: 'Q1-VALENCE', key: 'q1_2'},
-                { header: 'Q2', key: 'q2'},
+                { header: 'Q2-EMOTION_NUM', key: 'q2_num'},
+                { header: 'Q2-EMOTION', key: 'q2'},
                 { header: 'Q3-1', key: 'q3_1'},
                 { header: 'Q3-2', key: 'q3_2'},
                 { header: 'Q3-3', key: 'q3_3'},
@@ -73,11 +74,35 @@ module.exports = function (router, passport) {
             ];
             result.reduce(function (total, item) {
                 return total.then(async function () {
+                    let emotion = 0;
+                    switch (item.sv_emotion) {
+                        case "anger":
+                            emotion = 1;
+                            break;
+                        case "excitement":
+                            emotion = 2;
+                            break;
+                        case "fear":
+                            emotion = 3;
+                            break;
+                        case "happiness":
+                            emotion = 4;
+                            break;
+                        case "sadness":
+                            emotion = 5;
+                            break;
+                        case "neutral":
+                            emotion = 6;
+                            break;
+                        case "default":
+                            break;
+                    }
                     worksheet.addRow({
                         'sv_num': item.sv_num,
                         'sv_file_name': item.sv_file_name,
                         'q1_1': item.sv_arousal,
                         'q1_2': item.sv_valence,
+                        'q2_num': emotion,
                         'q2': item.sv_emotion,
                         'q3_1': parseInt(item.sv_question["1"]),
                         'q3_2': parseInt(item.sv_question["2"]),
@@ -147,6 +172,8 @@ module.exports = function (router, passport) {
         });
 
         newSurvey.save(function(err){
+            if(err)
+                console.log(err);
             res.json(parseInt(page)+1);
         })
     })
