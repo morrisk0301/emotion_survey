@@ -1,4 +1,5 @@
 {
 	"node": true,
-	"predef": [ "require", "module" ]
+	"predef": [ "require", "module" ],
+	"esversion": 6
 }

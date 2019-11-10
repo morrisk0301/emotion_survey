@@ -23,8 +23,9 @@ module.exports = function (router, passport) {
         }, (err, result) => {
             const page = result.length+1;
             const seed = req.user.user_seed[page];
-            if(page >= 60)
+            if(page > 60)
                 return res.render('done');
+            console.log(seed);
             res.render('survey', {page: page, seed: seed});
         });
     });
@@ -41,7 +42,7 @@ module.exports = function (router, passport) {
         const database = req.app.get('database');
         database.UserModel.find({}, (err, results) => {
             res.render('admin', {user: results});
-        })
+        });
     });
 
     router.get('/download/:id', function(req, res){
@@ -116,13 +117,13 @@ module.exports = function (router, passport) {
                         'q3_10': parseInt(item.sv_question["10"]),
                         'q4': item.sv_detail,
                     });
-                })
+                });
             }, Promise.resolve()).then(function () {
                 workbook.xlsx.writeBuffer().then((buffer) => {
                     res.json(new Buffer(buffer, 'array'));
                 });
             });
-        })
+        });
     });
 
     router.post('/signup', function (req, res, next) {
@@ -175,6 +176,6 @@ module.exports = function (router, passport) {
             if(err)
                 console.log(err);
             res.json(parseInt(page)+1);
-        })
-    })
+        });
+    });
 };
