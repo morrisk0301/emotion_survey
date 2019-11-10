@@ -22,7 +22,7 @@ module.exports = function (router, passport) {
             sv_user_id: req.user.user_id
         }, (err, result) => {
             const page = result.length+1;
-            const seed = req.user.user_seed[page];
+            const seed = req.user.user_seed[page-1];
             if(page > 60)
                 return res.render('done');
             console.log(seed);
